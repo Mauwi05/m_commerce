@@ -1,6 +1,6 @@
 # Especificación de Requerimientos de Software (SRS)
 
-**Proyecto:** Plataforma Móvil de E-Commerce & Marketplace Multi-Vendedor con "Custom Lab" (IA & Mockups) y Drops Exclusivos  
+**Proyecto:** Plataforma Móvil de E-Commerce & Marketplace Multi-Vendedor con "Custom Lab" (IA & Mockups) y Drops Exclusi
 **Desarrollador:** Mauricio Julián Martínez Rodríguez
 **Materia:** Desarrollo de Aplicaciones Móviles / Backend
 **Arquitectura:** Frontend en Flutter + Backend Serverless en Firebase (Escalable a Web)
