@@ -5,6 +5,7 @@ import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,10 +27,7 @@ class MCommerceApp extends StatelessWidget {
       child: MaterialApp(
         title: 'M-Commerce Marketplace',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1E1E2C)),
-          useMaterial3: true,
-        ),
+        theme: AppTheme.lightTheme,
         home: const AuthWrapper(),
       ),
     );

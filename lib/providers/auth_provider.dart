@@ -66,6 +66,17 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
+  Future<bool> activateSellerMode(String storeName) async {
+    if (_user == null) return false;
+    return _runAuthAction(() async {
+      await _authService.activateSellerMode(
+        uid: _user!.uid,
+        storeName: storeName,
+      );
+      _user = await _authService.getUserData(_user!.uid);
+    });
+  }
+
   Future<void> signOut() async {
     _isLoading = true;
     notifyListeners();
