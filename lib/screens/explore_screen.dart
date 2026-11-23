@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/product_model.dart';
+import '../providers/locale_provider.dart';
 import '../services/product_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/glass_container.dart';
@@ -18,27 +20,50 @@ class _ExploreScreenState extends State<ExploreScreen> {
   final _productService = ProductService();
   String _selectedCategory = 'todo';
 
-  final List<Map<String, String>> _categories = [
-    {'id': 'todo', 'label': 'Todo'},
-    {'id': 'ropa', 'label': 'Ropa'},
-    {'id': 'joyeria', 'label': 'Joyería'},
-    {'id': 'accesorios', 'label': 'Accesorios'},
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocaleProvider>();
+
+    final categories = [
+      {'id': 'todo', 'label': loc.t('cat_all')},
+      {'id': 'ropa', 'label': loc.t('cat_clothing')},
+      {'id': 'joyeria', 'label': loc.t('cat_jewelry')},
+      {'id': 'accesorios', 'label': loc.t('cat_accessories')},
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('M-COMMERCE'),
         actions: [
+          TextButton.icon(
+            onPressed: () => context.read<LocaleProvider>().toggleLanguage(),
+            icon: const Icon(
+              Icons.language,
+              size: 18,
+              color: AppColors.textPrimary,
+            ),
+            label: Text(
+              loc.languageCode,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+            ),
+            style: TextButton.styleFrom(
+              backgroundColor: AppColors.surface,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
           IconButton(
             tooltip: 'Carrito',
             icon: const Icon(Icons.shopping_bag_outlined),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('El carrito se habilitará en el Bloque 3'),
-                ),
+                SnackBar(content: Text(loc.t('cart_soon'))),
               );
             },
           ),
@@ -57,25 +82,22 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
           return CustomScrollView(
             slivers: [
-              // Hero Banner Editorial
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-                  child: _buildHeroBanner(),
+                  child: _buildHeroBanner(loc),
                 ),
               ),
-
-              // Filtros en píldoras
               SliverToBoxAdapter(
                 child: SizedBox(
                   height: 44,
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     scrollDirection: Axis.horizontal,
-                    itemCount: _categories.length,
+                    itemCount: categories.length,
                     separatorBuilder: (_, _) => const SizedBox(width: 10),
                     itemBuilder: (context, index) {
-                      final cat = _categories[index];
+                      final cat = categories[index];
                       final isSelected = _selectedCategory == cat['id'];
 
                       return GestureDetector(
@@ -109,10 +131,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ),
                 ),
               ),
-
               const SliverToBoxAdapter(child: SizedBox(height: 20)),
-
-              // Estado de carga o catálogo vacío
               if (snapshot.connectionState == ConnectionState.waiting)
                 const SliverFillRemaining(
                   child: Center(child: CircularProgressIndicator()),
@@ -133,12 +152,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Aún no hay productos aquí',
+                            loc.t('empty_title'),
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 4),
-                          const Text(
-                            'Activa tu Modo Vendedor en Perfil para publicar tu primer artículo.',
+                          Text(
+                            loc.t('empty_subtitle'),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -147,9 +166,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ),
                 )
               else
-                // Cuadrícula espaciosa de 2 columnas
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 110),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 120),
                   sliver: SliverGrid(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -181,7 +199,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  Widget _buildHeroBanner() {
+  Widget _buildHeroBanner(LocaleProvider loc) {
     return Container(
       height: 190,
       decoration: BoxDecoration(
@@ -194,12 +212,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
       ),
       child: Stack(
         children: [
-          // Tipografía gigante de fondo estilo editorial
           Positioned(
-            right: -10,
+            right: -6,
             bottom: -18,
             child: Text(
-              'DROP 01',
+              loc.t('hero_watermark'),
               style: AppTheme.editorialTitle(
                 fontSize: 96,
                 color: Colors.white.withValues(alpha: 0.08),
@@ -220,9 +237,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     horizontal: 12,
                     vertical: 5,
                   ),
-                  child: const Text(
-                    'EDICIÓN LIMITADA',
-                    style: TextStyle(
+                  child: Text(
+                    loc.t('hero_badge'),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
@@ -234,9 +251,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'NEW STREETWEAR & JOYERÍA',
+                      loc.t('hero_title'),
                       style: AppTheme.editorialTitle(
-                        fontSize: 32,
+                        fontSize: 30,
                         color: Colors.white,
                       ),
                     ),
@@ -251,19 +268,19 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           horizontal: 16,
                           vertical: 8,
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Explorar Drops',
-                              style: TextStyle(
+                              loc.t('hero_cta'),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            SizedBox(width: 6),
-                            Icon(
+                            const SizedBox(width: 6),
+                            const Icon(
                               Icons.arrow_forward,
                               color: Colors.white,
                               size: 14,

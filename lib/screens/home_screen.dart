@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/glass_container.dart';
 import 'explore_screen.dart';
@@ -16,19 +18,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocaleProvider>();
+
     final screens = [
       ExploreScreen(
         onGoToDrops: () => setState(() => _currentIndex = 1),
       ),
-      const _PlaceholderTab(
+      _PlaceholderTab(
         icon: Icons.bolt_rounded,
-        title: 'DROPS EXCLUSIVOS',
-        subtitle: 'Aquí vivirán los lanzamientos con cuenta regresiva en vivo.',
+        title: loc.t('drops_title'),
+        subtitle: loc.t('drops_subtitle'),
       ),
-      const _PlaceholderTab(
+      _PlaceholderTab(
         icon: Icons.auto_awesome_rounded,
-        title: 'CUSTOM LAB IA',
-        subtitle: 'Estampa tus diseños con Inteligencia Artificial en tiempo real.',
+        title: loc.t('lab_title'),
+        subtitle: loc.t('lab_subtitle'),
       ),
       const ProfileScreen(),
     ];
@@ -56,10 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _navItem(Icons.grid_view_rounded, 'Explorar', 0),
-                    _navItem(Icons.bolt_rounded, 'Drops', 1),
-                    _navItem(Icons.auto_awesome_rounded, 'Lab IA', 2),
-                    _navItem(Icons.person_outline_rounded, 'Perfil', 3),
+                    _navItem(Icons.grid_view_rounded, loc.t('nav_explore'), 0),
+                    _navItem(Icons.bolt_rounded, loc.t('nav_drops'), 1),
+                    _navItem(Icons.auto_awesome_rounded, loc.t('nav_lab'), 2),
+                    _navItem(Icons.person_outline_rounded, loc.t('nav_profile'), 3),
                   ],
                 ),
               ),

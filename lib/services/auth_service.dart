@@ -144,6 +144,41 @@ class AuthService {
     });
   }
 
+  Future<void> updateUserProfile({
+    required String uid,
+    required String name,
+    String? photoUrl,
+    String? phone,
+    String? bio,
+    String? address,
+    String? storeName,
+  }) async {
+    final Map<String, dynamic> updates = {
+      'name': name.trim(),
+      'phone': phone?.trim().isEmpty == true ? null : phone?.trim(),
+      'bio': bio?.trim().isEmpty == true ? null : bio?.trim(),
+      'address': address?.trim().isEmpty == true ? null : address?.trim(),
+    };
+
+    if (photoUrl != null) {
+      updates['photoUrl'] = photoUrl;
+    }
+
+    if (storeName != null && storeName.trim().isNotEmpty) {
+      updates['storeName'] = storeName.trim();
+    }
+
+    await _firestore.collection('users').doc(uid).update(updates);
+
+    final user = _auth.currentUser;
+    if (user != null) {
+      await user.updateDisplayName(name.trim());
+      if (photoUrl != null) {
+        await user.updatePhotoURL(photoUrl);
+      }
+    }
+  }
+
   // 6. Cerrar Sesión
   Future<void> signOut() async {
     if (!kIsWeb) {

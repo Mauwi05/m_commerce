@@ -29,7 +29,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   XFile? _pickedImage;
   Uint8List? _imageBytes;
   String _selectedCategory = 'ropa';
-  final List<String> _availableSizes = ['S', 'M', 'L', 'XL'];
+  final List<String> _availableSizes = ['S', 'M', 'L', 'XL', 'Oversize'];
   final Set<String> _selectedSizes = {'M', 'L'};
   bool _isDrop = false;
   bool _isCustomizable = false;
@@ -63,6 +63,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (_pickedImage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Selecciona una foto para el producto')),
+      );
+      return;
+    }
+
+    if (_selectedCategory == 'ropa' && _selectedSizes.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Selecciona al menos una talla')),
       );
       return;
     }

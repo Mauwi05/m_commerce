@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
+import '../services/cloudinary_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
+  final CloudinaryService _cloudinaryService = CloudinaryService();
 
   UserModel? _user;
   bool _isLoading = false;
@@ -73,6 +76,39 @@ class AuthProvider extends ChangeNotifier {
         uid: _user!.uid,
         storeName: storeName,
       );
+      _user = await _authService.getUserData(_user!.uid);
+    });
+  }
+
+  Future<bool> updateProfile({
+    required String name,
+    XFile? newPhoto,
+    String? phone,
+    String? bio,
+    String? address,
+    String? storeName,
+  }) async {
+    if (_user == null) return false;
+    return _runAuthAction(() async {
+      String? photoUrl = _user!.photoUrl;
+
+      if (newPhoto != null) {
+        photoUrl = await _cloudinaryService.uploadXFile(
+          newPhoto,
+          category: 'avatars',
+        );
+      }
+
+      await _authService.updateUserProfile(
+        uid: _user!.uid,
+        name: name,
+        photoUrl: photoUrl,
+        phone: phone,
+        bio: bio,
+        address: address,
+        storeName: storeName,
+      );
+
       _user = await _authService.getUserData(_user!.uid);
     });
   }

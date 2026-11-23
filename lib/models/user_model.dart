@@ -5,6 +5,9 @@ class UserModel {
   final String name;
   final String email;
   final String? photoUrl;
+  final String? phone;
+  final String? bio;
+  final String? address;
   final bool isSeller;
   final String? storeName;
   final DateTime createdAt;
@@ -14,6 +17,9 @@ class UserModel {
     required this.name,
     required this.email,
     this.photoUrl,
+    this.phone,
+    this.bio,
+    this.address,
     this.isSeller = false,
     this.storeName,
     required this.createdAt,
@@ -25,6 +31,9 @@ class UserModel {
       'name': name,
       'email': email,
       'photoUrl': photoUrl,
+      'phone': phone,
+      'bio': bio,
+      'address': address,
       'isSeller': isSeller,
       'storeName': storeName,
       'createdAt': Timestamp.fromDate(createdAt),
@@ -37,6 +46,9 @@ class UserModel {
       name: map['name'] ?? '',
       email: map['email'] ?? '',
       photoUrl: map['photoUrl'],
+      phone: map['phone'],
+      bio: map['bio'],
+      address: map['address'],
       isSeller: map['isSeller'] ?? false,
       storeName: map['storeName'],
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),

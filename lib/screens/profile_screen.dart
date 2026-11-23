@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product_model.dart';
 import '../providers/auth_provider.dart';
+import '../providers/locale_provider.dart';
 import '../services/product_service.dart';
 import '../theme/app_theme.dart';
 import 'add_product_screen.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -45,6 +47,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
+    final loc = context.watch<LocaleProvider>();
     final user = authProvider.user;
     final productService = ProductService();
 
@@ -52,10 +55,10 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mi Perfil'),
+        title: Text(loc.t('profile_title')),
         actions: [
           IconButton(
-            tooltip: 'Cerrar sesión',
+            tooltip: loc.t('logout'),
             icon: const Icon(Icons.logout),
             onPressed: () => context.read<AuthProvider>().signOut(),
           ),
@@ -65,80 +68,107 @@ class ProfileScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 110),
         children: [
-          // Tarjeta de usuario
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  radius: 32,
-                  backgroundColor: AppColors.primary,
-                  backgroundImage: user.photoUrl != null
-                      ? NetworkImage(user.photoUrl!)
-                      : null,
-                  child: user.photoUrl == null
-                      ? Text(
-                          user.name.isNotEmpty
-                              ? user.name[0].toUpperCase()
-                              : 'U',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 32,
+                      backgroundColor: AppColors.primary,
+                      backgroundImage: user.photoUrl != null
+                          ? NetworkImage(user.photoUrl!)
+                          : null,
+                      child: user.photoUrl == null
+                          ? Text(
+                              user.name.isNotEmpty
+                                  ? user.name[0].toUpperCase()
+                                  : 'U',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : null,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.name,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
-                        )
-                      : null,
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user.name,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(user.email),
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: user.isSeller
-                              ? AppColors.primary
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          user.isSeller
-                              ? 'Tienda: ${user.storeName}'
-                              : 'Comprador',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: user.isSeller
-                                ? Colors.white
-                                : AppColors.textPrimary,
+                          const SizedBox(height: 2),
+                          Text(
+                            user.email,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: user.isSeller
+                                  ? AppColors.primary
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              user.isSeller
+                                  ? '${loc.t('store_prefix')}: ${user.storeName}'
+                                  : loc.t('buyer'),
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: user.isSeller
+                                    ? Colors.white
+                                    : AppColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      tooltip: loc.t('edit_profile'),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      icon: const Icon(
+                        Icons.edit_outlined,
+                        size: 20,
+                        color: AppColors.textPrimary,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const EditProfileScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
+                if (user.bio != null && user.bio!.isNotEmpty) ...[
+                  const SizedBox(height: 14),
+                  Text(user.bio!),
+                ],
               ],
             ),
           ),
-
           const SizedBox(height: 24),
-
-          // Panel de Vendedor
           if (!user.isSeller)
             Container(
               padding: const EdgeInsets.all(20),
@@ -150,17 +180,15 @@ class ProfileScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '¿Quieres vender tu ropa o joyería?',
+                    loc.t('seller_prompt_title'),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'Activa tu perfil de vendedor gratis y publica artículos en tiempo real.',
-                  ),
+                  Text(loc.t('seller_prompt_subtitle')),
                   const SizedBox(height: 16),
                   FilledButton(
                     onPressed: () => _showActivateSellerDialog(context),
-                    child: const Text('Activar Modo Vendedor'),
+                    child: Text(loc.t('activate_seller')),
                   ),
                 ],
               ),
@@ -174,11 +202,11 @@ class ProfileScreen extends StatelessWidget {
                 );
               },
               icon: const Icon(Icons.add),
-              label: const Text('Publicar Nuevo Producto'),
+              label: Text(loc.t('publish_product')),
             ),
             const SizedBox(height: 28),
             Text(
-              'Mis Publicaciones',
+              loc.t('my_listings'),
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 12),
@@ -196,9 +224,9 @@ class ProfileScreen extends StatelessWidget {
 
                 final myProducts = snapshot.data ?? [];
                 if (myProducts.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Text('Todavía no has publicado ningún artículo.'),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Text(loc.t('no_listings')),
                   );
                 }
 

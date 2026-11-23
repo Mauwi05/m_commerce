@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../models/product_model.dart';
+import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import 'glass_container.dart';
 
@@ -67,9 +69,9 @@ class ProductCard extends StatelessWidget {
                         horizontal: 10,
                         vertical: 4,
                       ),
-                      child: const Text(
-                        'DROP',
-                        style: TextStyle(
+                      child: Text(
+                        context.watch<LocaleProvider>().t('badge_drop'),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 10,
                           fontWeight: FontWeight.w800,
