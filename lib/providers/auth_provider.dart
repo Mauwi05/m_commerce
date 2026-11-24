@@ -115,11 +115,18 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> signOut() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
-    await _authService.signOut();
-    _user = null;
-    _isLoading = false;
-    notifyListeners();
+
+    try {
+      await _authService.signOut();
+    } catch (e) {
+      _errorMessage = 'Error al cerrar sesión: $e';
+    } finally {
+      _user = null;
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<bool> _runAuthAction(Future<void> Function() action) async {

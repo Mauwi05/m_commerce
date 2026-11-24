@@ -20,8 +20,10 @@ class LocaleProvider extends ChangeNotifier {
     'nav_drops': 'Exclusivos',
     'nav_lab': 'Diseñar',
     'nav_profile': 'Perfil',
+    'login_subtitle':
+        'Compra, vende y descubre de todo: moda, joyeria, tecnología y más',
     'hero_badge': 'EDICIÓN LIMITADA',
-    'hero_title': 'ROPA PERSONALIZADA Y JOYERÍA',
+    'hero_title': 'COMPRA, VENDE Y DESCUBRE DE TODO',
     'hero_cta': 'Ver lanzamientos',
     'hero_watermark': 'NUEVO',
     'cat_all': 'Todo',
@@ -42,8 +44,8 @@ class LocaleProvider extends ChangeNotifier {
     'logout': 'Cerrar sesión',
     'buyer': 'Comprador',
     'store_prefix': 'Tienda',
-    'seller_prompt_title': '¿Quieres vender tu ropa o joyería?',
-    'seller_prompt_subtitle': 'Activa tu perfil de vendedor gratis y publica artículos en tiempo real.',
+    'seller_prompt_title': '¿Tienes algo que vender?',
+    'seller_prompt_subtitle': 'Activa tu perfil de vendedor gratis y publica artículos de cualquier categoría en tiempo real.',
     'activate_seller': 'Activar Modo Vendedor',
     'publish_product': 'Publicar Nuevo Producto',
     'my_listings': 'Mis Publicaciones',
@@ -58,6 +60,9 @@ class LocaleProvider extends ChangeNotifier {
     'save_changes': 'Guardar cambios',
     'profile_updated': 'Perfil actualizado correctamente',
     'name_required': 'Ingresa tu nombre',
+    'logout_title': '¿Cerrar sesión?',
+    'logout_message': 'Se cerrará tu sesión actual en este dispositivo.',
+    'cancel': 'Cancelar',
   };
 
   static const Map<String, String> _en = {
@@ -65,8 +70,10 @@ class LocaleProvider extends ChangeNotifier {
     'nav_drops': 'Exclusive',
     'nav_lab': 'Custom Lab',
     'nav_profile': 'Profile',
+    'login_subtitle':
+        'Buy, sell, and discover everything: fashion, jewelry, tech, and more',
     'hero_badge': 'LIMITED EDITION',
-    'hero_title': 'CUSTOM APPAREL & JEWELRY',
+    'hero_title': 'BUY, SELL & DISCOVER EVERYTHING',
     'hero_cta': 'View releases',
     'hero_watermark': 'NEW',
     'cat_all': 'All',
@@ -87,9 +94,8 @@ class LocaleProvider extends ChangeNotifier {
     'logout': 'Sign out',
     'buyer': 'Buyer',
     'store_prefix': 'Store',
-    'seller_prompt_title': 'Want to sell your apparel or jewelry?',
-    'seller_prompt_subtitle':
-        'Activate your seller profile for free and list items in real time.',
+    'seller_prompt_title': 'Have something to sell?',
+    'seller_prompt_subtitle': 'Activate your seller profile for free and list items from any category in real time.',
     'activate_seller': 'Activate Seller Mode',
     'publish_product': 'Publish New Product',
     'my_listings': 'My Listings',
@@ -104,5 +110,8 @@ class LocaleProvider extends ChangeNotifier {
     'save_changes': 'Save changes',
     'profile_updated': 'Profile updated successfully',
     'name_required': 'Enter your name',
+    'logout_title': 'Sign out?',
+    'logout_message': 'Your current session on this device will be closed.',
+    'cancel': 'Cancel',
   };
 }

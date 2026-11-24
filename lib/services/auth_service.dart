@@ -76,6 +76,7 @@ class AuthService {
 
     if (kIsWeb) {
       final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      googleProvider.setCustomParameters({'prompt': 'select_account'});
       credential = await _auth.signInWithPopup(googleProvider);
     } else {
       await _ensureGoogleSignInInitialized();
@@ -182,8 +183,11 @@ class AuthService {
   // 6. Cerrar Sesión
   Future<void> signOut() async {
     if (!kIsWeb) {
-      await _ensureGoogleSignInInitialized();
-      await GoogleSignIn.instance.signOut();
+      try {
+        await _ensureGoogleSignInInitialized();
+        await GoogleSignIn.instance.signOut();
+        await GoogleSignIn.instance.disconnect();
+      } catch (_) {}
     }
     await _auth.signOut();
   }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/glass_container.dart';
+import '../widgets/logout_button.dart';
 import 'explore_screen.dart';
 import 'profile_screen.dart';
 
@@ -128,18 +129,27 @@ class _PlaceholderTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 52, color: AppColors.primary),
-            const SizedBox(height: 16),
-            Text(title, style: AppTheme.editorialTitle(fontSize: 34)),
-            const SizedBox(height: 8),
-            Text(subtitle, textAlign: TextAlign.center),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('M-COMMERCE'),
+        actions: const [
+          LogoutButton(),
+          SizedBox(width: 8),
+        ],
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 52, color: AppColors.primary),
+              const SizedBox(height: 16),
+              Text(title, style: AppTheme.editorialTitle(fontSize: 34)),
+              const SizedBox(height: 8),
+              Text(subtitle, textAlign: TextAlign.center),
+            ],
+          ),
         ),
       ),
     );

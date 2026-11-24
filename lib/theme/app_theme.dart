@@ -12,9 +12,45 @@ class AppColors {
   // Acentos funcionales
   static const Color dropAccent = Color(0xFFFF4D1C);
   static const Color aiAccent = Color(0xFF6366F1);
+
+  // Gris platinado
+  static const Color platinumLight = Color(0xFFF0F2F5);
+  static const Color platinum = Color(0xFFE2E6EC);
+  static const Color platinumBorder = Color(0xFFD0D6DF);
+  static const Color cardShadow = Color(0x14111827);
 }
 
 class AppTheme {
+  static BoxDecoration platinumCardDecoration({
+    double radius = 22,
+    bool elevated = true,
+  }) {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(radius),
+      gradient: const LinearGradient(
+        colors: [
+          AppColors.platinumLight,
+          AppColors.platinum,
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      border: Border.all(
+        color: AppColors.platinumBorder,
+        width: 1.1,
+      ),
+      boxShadow: elevated
+          ? const [
+              BoxShadow(
+                color: AppColors.cardShadow,
+                blurRadius: 18,
+                offset: Offset(0, 8),
+              ),
+            ]
+          : null,
+    );
+  }
+
   static TextStyle editorialTitle({
     double fontSize = 36,
     Color color = AppColors.textPrimary,

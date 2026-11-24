@@ -5,6 +5,7 @@ import '../providers/locale_provider.dart';
 import '../services/product_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/glass_container.dart';
+import '../widgets/logout_button.dart';
 import '../widgets/product_card.dart';
 
 class ExploreScreen extends StatefulWidget {
@@ -67,6 +68,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               );
             },
           ),
+          const LogoutButton(),
           const SizedBox(width: 8),
         ],
       ),

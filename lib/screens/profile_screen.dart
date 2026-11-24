@@ -5,6 +5,7 @@ import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
 import '../services/product_service.dart';
 import '../theme/app_theme.dart';
+import '../widgets/logout_button.dart';
 import 'add_product_screen.dart';
 import 'edit_profile_screen.dart';
 
@@ -56,13 +57,9 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(loc.t('profile_title')),
-        actions: [
-          IconButton(
-            tooltip: loc.t('logout'),
-            icon: const Icon(Icons.logout),
-            onPressed: () => context.read<AuthProvider>().signOut(),
-          ),
-          const SizedBox(width: 8),
+        actions: const [
+          LogoutButton(),
+          SizedBox(width: 8),
         ],
       ),
       body: ListView(
@@ -70,33 +67,40 @@ class ProfileScreen extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(20),
-            ),
+            decoration: AppTheme.platinumCardDecoration(radius: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 32,
-                      backgroundColor: AppColors.primary,
-                      backgroundImage: user.photoUrl != null
-                          ? NetworkImage(user.photoUrl!)
-                          : null,
-                      child: user.photoUrl == null
-                          ? Text(
-                              user.name.isNotEmpty
-                                  ? user.name[0].toUpperCase()
-                                  : 'U',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          : null,
+                    Container(
+                      padding: const EdgeInsets.all(2.5),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        radius: 32,
+                        backgroundColor: AppColors.primary,
+                        backgroundImage: user.photoUrl != null
+                            ? NetworkImage(user.photoUrl!)
+                            : null,
+                        child: user.photoUrl == null
+                            ? Text(
+                                user.name.isNotEmpty
+                                    ? user.name[0].toUpperCase()
+                                    : 'U',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : null,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
@@ -144,6 +148,7 @@ class ProfileScreen extends StatelessWidget {
                       tooltip: loc.t('edit_profile'),
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.white,
+                        elevation: 1,
                       ),
                       icon: const Icon(
                         Icons.edit_outlined,
@@ -162,8 +167,23 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 if (user.bio != null && user.bio!.isNotEmpty) ...[
-                  const SizedBox(height: 14),
-                  Text(user.bio!),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.65),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Text(
+                      user.bio!,
+                      style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 13,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -172,10 +192,7 @@ class ProfileScreen extends StatelessWidget {
           if (!user.isSeller)
             Container(
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.border),
-                borderRadius: BorderRadius.circular(20),
-              ),
+              decoration: AppTheme.platinumCardDecoration(radius: 22),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -233,24 +250,29 @@ class ProfileScreen extends StatelessWidget {
                 return Column(
                   children: myProducts.map((product) {
                     return Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
+                      margin: const EdgeInsets.only(bottom: 14),
+                      padding: const EdgeInsets.all(12),
+                      decoration: AppTheme.platinumCardDecoration(radius: 18),
                       child: Row(
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 1.5,
+                              ),
+                            ),
+                            clipBehavior: Clip.antiAlias,
                             child: Image.network(
                               product.imageUrl,
-                              width: 56,
-                              height: 56,
+                              width: 58,
+                              height: 58,
                               fit: BoxFit.cover,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 14),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,17 +282,27 @@ class ProfileScreen extends StatelessWidget {
                                   style:
                                       Theme.of(context).textTheme.titleMedium,
                                 ),
+                                const SizedBox(height: 4),
                                 Text(
                                   '\$${product.price.toStringAsFixed(0)} MXN · Stock: ${product.stock}',
-                                  style: const TextStyle(fontSize: 12),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                           IconButton(
+                            style: IconButton.styleFrom(
+                              backgroundColor:
+                                  Colors.white.withValues(alpha: 0.8),
+                            ),
                             icon: const Icon(
                               Icons.delete_outline,
                               color: Colors.redAccent,
+                              size: 20,
                             ),
                             onPressed: () =>
                                 productService.deleteProduct(product.id),
