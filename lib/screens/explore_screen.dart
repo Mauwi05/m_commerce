@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product_model.dart';
+import '../providers/cart_provider.dart';
 import '../providers/locale_provider.dart';
 import '../services/product_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/glass_container.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/product_card.dart';
+import 'cart_screen.dart';
+import 'product_detail_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
   final VoidCallback onGoToDrops;
@@ -24,6 +27,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     final loc = context.watch<LocaleProvider>();
+    final cartCount = context.watch<CartProvider>().itemCount;
 
     final categories = [
       {'id': 'todo', 'label': loc.t('cat_all')},
@@ -60,11 +64,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ),
           ),
           IconButton(
-            tooltip: 'Carrito',
-            icon: const Icon(Icons.shopping_bag_outlined),
+            tooltip: loc.t('cart_title'),
+            icon: Badge(
+              isLabelVisible: cartCount > 0,
+              label: Text('$cartCount'),
+              backgroundColor: AppColors.dropAccent,
+              child: const Icon(Icons.shopping_bag_outlined),
+            ),
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(loc.t('cart_soon'))),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CartScreen()),
               );
             },
           ),
@@ -184,8 +194,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         return ProductCard(
                           product: product,
                           onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(product.title)),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ProductDetailScreen(product: product),
+                              ),
                             );
                           },
                         );
